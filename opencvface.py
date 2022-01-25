@@ -7,10 +7,10 @@ import datetime
 
 face_cascade=cv2.CascadeClassifier('test1/cascades/data/haarcascade_frontalface_alt2.xml')
 recognizer=cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("trainer.yml")
+recognizer.read("test1/trainer.yml")
 
 labels={}
-with open("labels.pickle","rb") as f:
+with open("test1/labels.pickle","rb") as f:
     og_labels=pickle.load(f)
     labels={v:k for k,v in og_labels.items()}
 
@@ -68,7 +68,7 @@ while(True):
             stroke=2
             cv2.putText(frame,name,(x,y),font,1,color,stroke,cv2.LINE_AA)
 
-        img_item="myimage.jpg"
+        img_item="test1/myimage.jpg"
         cv2.imwrite(img_item,roi_gray)
         color=(255,0,0)
         stroke=2
