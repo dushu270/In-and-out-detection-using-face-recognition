@@ -5,6 +5,10 @@ import cv2
 import pickle
 import datetime
 
+
+left, center, right = False, False, False
+x=150
+
 face_cascade=cv2.CascadeClassifier('test1/cascades/data/haarcascade_frontalface_alt2.xml')
 recognizer=cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("test1/trainer.yml")
@@ -51,10 +55,10 @@ while(True):
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     faces=face_cascade.detectMultiScale(image=gray,scaleFactor=1.5,minNeighbors=5)
 
-    for(x,y,w,h) in faces:
+    for(x1,y1,w1,h1) in faces:
         #print(x,y,w,h)
-        roi_gray=gray[y:y+h,x:x+w]
-        roi_color=frame[y:y+h,x:x+w]
+        roi_gray=gray[y1:y1+h1,x1:x1+w1]
+        roi_color=frame[y1:y1+h1,x1:x1+w1]
         
         id_,conf=recognizer.predict(roi_gray)
 
@@ -66,15 +70,20 @@ while(True):
             name=labels[id_]
             color=(255,255,255)
             stroke=2
-            cv2.putText(frame,name,(x,y),font,1,color,stroke,cv2.LINE_AA)
+            cv2.putText(frame,name,(x1,y1),font,1,color,stroke,cv2.LINE_AA)
+            
+            
 
         img_item="test1/myimage.jpg"
+        
+
+
         cv2.imwrite(img_item,roi_gray)
         color=(255,0,0)
         stroke=2
-        width=x+w
-        height=y+h
-        cv2.rectangle(frame, (x,y),(width,height),color,stroke) 
+        width=x1+w1
+        height=y1+h1
+        cv2.rectangle(frame, (x1,y1),(width,height),color,stroke) 
     cv2.imshow('frame',frame)   
     if(cv2.waitKey(20) & 0xFF ==  ord('q')):
         break    
