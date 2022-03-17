@@ -71,14 +71,54 @@ while(True):
             color=(255,255,255)
             stroke=2
             cv2.putText(frame,name,(x1,y1),font,1,color,stroke,cv2.LINE_AA)
+
+
+
+        if not(left) and not(right):
+            if x < 100:
+                left = True
+
+            elif x > 300:
+                right = True    
+
+                
+        elif left : 
+            if x < 300 and x > 150 and not(center):
+                print(x," x has been set to it")
+                center = True
+
+            elif x > 300:
+                if center:
+                    print("motion to right taken place")
+                    mask = np.zeros((200, 400))
+                    cv2.putText(mask, "to right", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255), 3)
+                    left = False
+                    center = False
+                else:
+                    right = True
+
+        elif right : 
+            if x < 400 and x > 150 and not(center):
+                print(x," x has been set to it")
+                center = True
+            if x < 100:
+                if center:
+                    print("motion done to the left side")
+                    mask = np.zeros((200, 400))
+                    cv2.putText(mask, "to left", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255), 3)
+                    right = False
+                    center = False
+
+                else:
+                    left = True        
             
             
 
-        img_item="test1/myimage.jpg"
+        #img_item="test1/myimage.jpg"
         
 
 
-        cv2.imwrite(img_item,roi_gray)
+        #cv2.imwrite(img_item,roi_gray)
         color=(255,0,0)
         stroke=2
         width=x1+w1
