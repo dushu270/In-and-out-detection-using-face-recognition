@@ -9,7 +9,7 @@ import time
 
 left, center, right = False, False, False
 x=150
-mask = np.zeros((1000,1000))
+mask = np.zeros((1000,1000,3))
 face_cascade=cv2.CascadeClassifier('test1/cascades/data/haarcascade_frontalface_alt2.xml')
 recognizer=cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("test1/trainer.yml")
@@ -67,7 +67,7 @@ while(True):
         
         id_,conf=recognizer.predict(roi_gray)
 
-        if(conf>=50):
+        if(conf<=100):
             print(conf)
             print(id_)
             print(labels[id_])
@@ -100,7 +100,7 @@ while(True):
                     cv2.FONT_HERSHEY_PLAIN, 3, (0,0,255))'''
                     #mask = np.zeros((1000, 1000))
                     ytest_pos+=50
-                    cv2.putText(mask, ("gone at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (255), 3)
+                    cv2.putText(mask, ("gone at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,0), 3)
                     left = False
                     center = False
                 else:
@@ -120,7 +120,7 @@ while(True):
                     #mask = np.zeros((1920, 500,300))
                     #mask = np.zeros((1000, 1000))
                     ytest_pos+=50
-                    cv2.putText(mask, ("came at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (255), 3)
+                    cv2.putText(mask, ("came at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255), 3)
                     right = False
                     center = False
 
