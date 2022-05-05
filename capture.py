@@ -40,12 +40,13 @@ while(True):
     frame=rescale_frame(frame,percent=80)
     frame=cv2.flip(frame,1)
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    faces=face_cascade.detectMultiScale(image=gray,scaleFactor=1.5,minNeighbors=5)   
+    faces=face_cascade.detectMultiScale(image=gray,scaleFactor=1.2,minNeighbors=6)   
 
 
     for(x1,y1,w1,h1) in faces: 
 
-        roi_gray=gray[y1:y1+h1,x1:x1+w1]
+        roi_gray=gray[y1-60:y1+h1+60 , x1-60:x1+w1+60]
+        print(roi_gray)
         img_name="myimage{}.jpg".format(i)
         i+=1
         targetDir="C:/Users/dushu/Desktop/majorproject/test1/images/d/"
@@ -54,7 +55,7 @@ while(True):
     
     cv2.imshow('frame',frame)
 
-    if(i==1000 or cv2.waitKey(20) & 0xFF ==  ord('q')):
+    if(i==200 or cv2.waitKey(20) & 0xFF ==  ord('q')):
         break
     
         

@@ -8,9 +8,11 @@ import time
 
 
 left, center, right = False, False, False
-x=150
+x=300
+
 mask = np.zeros((1000,1000,3))
 face_cascade=cv2.CascadeClassifier('test1/cascades/data/haarcascade_frontalface_alt2.xml')
+body_cascade=cv2.CascadeClassifier('test1/cascades/data/haarcascade_upperbody.xml')
 recognizer=cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("test1/trainer.yml")
 ytest_pos = 40
@@ -56,18 +58,21 @@ while(True):
     frame=rescale_frame(frame,percent=80)
     frame=cv2.flip(frame,1)
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    faces=face_cascade.detectMultiScale(image=gray,scaleFactor=1.5,minNeighbors=5)
+    faces=face_cascade.detectMultiScale(image=gray,scaleFactor=1.2,minNeighbors=6)
+    
 
     for(x1,y1,w1,h1) in faces:
 
         #print(x,y,w,h)
         x=x1
+        #print(x)
+
         roi_gray=gray[y1:y1+h1,x1:x1+w1]
         roi_color=frame[y1:y1+h1,x1:x1+w1]
         
         id_,conf=recognizer.predict(roi_gray)
 
-        if(conf<=100):
+        if(conf<=32):
             print(conf)
             print(id_)
             print(labels[id_])
@@ -76,6 +81,16 @@ while(True):
             color=(255,255,255)
             stroke=2
             cv2.putText(frame,name,(x1,y1),font,1,color,stroke,cv2.LINE_AA)
+        else:
+            name="unknown"  
+            print(conf)
+            #print(id_)
+            #print(labels[id_])
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            color=(255,255,255)
+            stroke=2
+            cv2.putText(frame,name,(x1,y1),font,1,color,stroke,cv2.LINE_AA)
+
 
 
 
@@ -83,16 +98,16 @@ while(True):
             if x < 100:
                 left = True
 
-            elif x > 300:
+            elif x > 500:
                 right = True    
 
                 
         elif left : 
-            if x < 300 and x > 150 and not(center):
+            if x < 450 and x > 200 and not(center):
                 print(x," x has been set to it")
                 center = True
 
-            elif x > 300:
+            elif x > 500:
                 if center:
                     print("motion to right taken place")
                     '''outp = np.zeros((1920, 500,300))
@@ -107,7 +122,7 @@ while(True):
                     right = True
 
         elif right : 
-            if x < 400 and x > 150 and not(center):
+            if x < 450 and x > 200 and not(center):
                 print(x," x has been set to it")
                 center = True
             if x < 100:
