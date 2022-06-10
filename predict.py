@@ -19,7 +19,7 @@ print(labels)
 
 for root,dirs,files in os.walk(image_dir):
     for file in files:
-        if(file.endswith("jpg") or file.endswith("png")):
+        if(file.endswith("jpg") or file.endswith("png") or file.endswith("jpeg")):
             path=os.path.join(root,file)
             label=os.path.basename(os.path.dirname(path)).replace(" ","").lower()
             
@@ -30,12 +30,12 @@ for root,dirs,files in os.walk(image_dir):
             image_array=np.array(pil_image,"uint8")
             #print(image_array)
             faces=face_cascade.detectMultiScale(image=image_array,scaleFactor=1.2,minNeighbors=6)
-            #print(faces)
+            print(faces)
             for (x,y,w,h) in faces:
                 roi=image_array[y:y+h,x:x+w]
 
                 id_,conf=recognizer.predict(roi)
-                if(conf<=40):
+                if(conf<=30):
                     print(labels[id_],conf,file)
                 else:
                     print(conf,file)    

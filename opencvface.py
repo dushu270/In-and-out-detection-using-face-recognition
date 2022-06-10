@@ -1,15 +1,18 @@
 from tkinter.ttk import LabeledScale
+from tkinter import *
+import tkinter 
 import cv2
 import numpy as np
 import cv2
 import pickle
 import datetime
 import time
+import matplotlib.pyplot as plt
 
-
+w=0.4
 left, center, right = False, False, False
 x=300
-
+names={}
 mask = np.zeros((1000,1000,3))
 face_cascade=cv2.CascadeClassifier('test1/cascades/data/haarcascade_frontalface_alt2.xml')
 body_cascade=cv2.CascadeClassifier('test1/cascades/data/haarcascade_upperbody.xml')
@@ -72,7 +75,7 @@ while(True):
         
         id_,conf=recognizer.predict(roi_gray)
 
-        if(conf<=32):
+        if(conf<=35):
             print(conf)
             print(id_)
             print(labels[id_])
@@ -81,8 +84,13 @@ while(True):
             color=(255,255,255)
             stroke=2
             cv2.putText(frame,name,(x1,y1),font,1,color,stroke,cv2.LINE_AA)
+            if name not in names:
+                names[name]=[[0],[0]]    
         else:
+            print(labels[id_])
             name="unknown"  
+            if name not in names:
+                names[name]=[[0],[0]]
             print(conf)
             #print(id_)
             #print(labels[id_])
@@ -110,14 +118,13 @@ while(True):
             elif x > 500:
                 if center:
                     print("motion to right taken place")
-                    '''outp = np.zeros((1920, 500,300))
-                    cv2.putText(outp, ("gone at {}".format(datetime.datetime.now().strftime("%H:%M"))+name),(0,0),
-                    cv2.FONT_HERSHEY_PLAIN, 3, (0,0,255))'''
+                    
                     #mask = np.zeros((1000, 1000))
                     ytest_pos+=50
-                    cv2.putText(mask, ("gone at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,0), 3)
+                    cv2.putText(mask, ("Entered at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,0), 3)
                     left = False
                     center = False
+                    names[name][0][0]+=1
                 else:
                     right = True
 
@@ -128,16 +135,15 @@ while(True):
             if x < 100:
                 if center:
                     print("motion done to the left side")
-                    ''' outp = np.zeros((1920,500, 300))
-                    cv2.putText(outp, ("came at {}".format(datetime.datetime.now().strftime("%H:%M"))+name),(0,0),
-                    cv2.FONT_HERSHEY_PLAIN, 3, (0,0,255))'''
+                    
 
                     #mask = np.zeros((1920, 500,300))
                     #mask = np.zeros((1000, 1000))
                     ytest_pos+=50
-                    cv2.putText(mask, ("came at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255), 3)
+                    cv2.putText(mask, ("Exited at {}".format(datetime.datetime.now().strftime("%H:%M"))+name), (50, ytest_pos), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255), 3)
                     right = False
                     center = False
+                    names[name][1][0]+=1
 
                 else:
                     left = True        
@@ -147,6 +153,7 @@ while(True):
         #img_item="test1/myimage.jpg"
         
 
+        
 
         #cv2.imwrite(img_item,roi_gray)
         color=(255,0,0)
@@ -156,11 +163,33 @@ while(True):
         cv2.rectangle(frame, (x1,y1),(width,height),color,stroke) 
     cv2.imshow('frame',frame)
     cv2.imshow("mask", mask)   
+
     if(cv2.waitKey(20) & 0xFF ==  ord('q')):
-        break    
+        break  
+
     
 cap.release()
-cv2.destroyAllWindows()    
+cv2.destroyAllWindows()
+print(names)
+entered=[]
+exited=[]
+for i in names:
+    entered.append(names[i][0][0])
+    exited.append(names[i][1][0])
+
+
+keys=list(names.keys())
+print(keys,entered,exited)
+bar1=np.arange(len(keys))
+bar2=[i+w for i in bar1]
+plt.bar(bar1,entered,w,label="entered",color='#7eb54e')
+plt.bar(bar2,exited,w,label="exited",color='red')
+plt.xlabel("People")
+plt.ylabel("Frequency")
+plt.title("IN AND OUT")
+plt.xticks(bar1,keys)
+plt.legend()
+plt.show()
     
     
    

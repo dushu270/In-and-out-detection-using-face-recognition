@@ -17,7 +17,7 @@ y_labels=[]
 
 for root,dirs,files in os.walk(image_dir):
     for file in files:
-        if(file.endswith("jpg") or file.endswith("png")):
+        if(file.endswith("jpg") or file.endswith("png") or file.endswith("JPG") or file.endswith("jpeg") or file.endswith("JPEG")):
             path=os.path.join(root,file)
             label=os.path.basename(os.path.dirname(path)).replace(" ","").lower()
             #print(label,path)
@@ -38,8 +38,10 @@ for root,dirs,files in os.walk(image_dir):
             image_array=np.array(pil_image,"uint8")
             #print(image_array)
             faces=face_cascade.detectMultiScale(image=image_array,scaleFactor=1.2,minNeighbors=6)
-            print(faces,id_,label)
+            eyes=eye_cascade.detectMultiScale(image=image_array)
+            print(faces,label)
             for (x,y,w,h) in faces:
+                
                 roi=image_array[y:y+h,x:x+w]
                 x_train.append(roi)
                 y_labels.append(id_)

@@ -49,13 +49,13 @@ while(True):
         print(roi_gray)
         img_name="myimage{}.jpg".format(i)
         i+=1
-        targetDir="C:/Users/dushu/Desktop/majorproject/test1/images/d/"
+        targetDir="C:/Users/dushu/Desktop/majorproject/test1/images/dushyanth/"
         cv2.imwrite(os.path.join(targetDir,img_name), roi_gray)
     
     
     cv2.imshow('frame',frame)
 
-    if(i==200 or cv2.waitKey(20) & 0xFF ==  ord('q')):
+    if(i==100 or cv2.waitKey(20) & 0xFF ==  ord('q')):
         break
     
         
